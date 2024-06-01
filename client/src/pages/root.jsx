@@ -1,10 +1,10 @@
-import Header from "@/components/header";
+import MainNavigation from "@/components/main-navigation";
 import { Outlet } from "react-router-dom";
 
 const Root = () => {
   return (
     <>
-      <Header />
+      <MainNavigation />
       <Outlet />
     </>
   );
