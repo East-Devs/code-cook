@@ -14,7 +14,6 @@ export const useRegisterForm = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
     setError("");
     setSuccess("");
     startTransition(() => {

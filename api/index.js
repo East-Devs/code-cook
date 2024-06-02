@@ -4,6 +4,7 @@ import cors from "cors";
 import prisma from "../script.js";
 import { getUserByEmail } from "../data/user.js";
 import jwt from "jsonwebtoken";
+const secretKey = process.env.JWT_SECRET;
 import bcryptjs from "bcryptjs";
 dotenv.config();
 const app = express();
@@ -18,6 +19,32 @@ app.get("/", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await getUserByEmail(email);
+
+    if (!user) {
+      return res.status(401).json({ error: "Authentication failed" });
+    }
+
+    const passwordMatch = await bcryptjs.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Authentication failed" });
+    }
+
+    // Create a JWT token
+    const token = jwt.sign({ userId: user._id, email: user.email }, secretKey, {
+      expiresIn: "1h",
+    });
+
+    res.status(200).json({ token, userId: user._id, success: "Logged In!" });
+  } catch (error) {
+    res.status(500).json({ error: "Authentication failed" });
   }
 });
 

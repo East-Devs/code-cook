@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
+import { loginUser } from "@/api/loginUser";
 
 export const useLoginForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -13,15 +14,17 @@ export const useLoginForm = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
     setError("");
     setSuccess("");
-    //   startTransition(() => {
-    //     login(values).then((data) => {
-    //       if (data && data.error) setError(data.error);
-    //       if (data && data.success) setSuccess(data.success);
-    //     });
-    //   });
+    startTransition(() => {
+      loginUser(data).then((response) => {
+        if (response.error) {
+          setError(response.error);
+        } else if (response.success) {
+          setSuccess(response.success);
+        }
+      });
+    });
   };
 
   return {
