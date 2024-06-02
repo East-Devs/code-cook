@@ -11,7 +11,12 @@ export const useLoginForm = () => {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   const onSubmit = (data) => {
     setError("");

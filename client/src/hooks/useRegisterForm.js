@@ -11,7 +11,13 @@ export const useRegisterForm = () => {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
 
   const onSubmit = (data) => {
     setError("");
