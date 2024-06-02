@@ -1,5 +1,4 @@
 import { CardWrapper } from "@/components/card-wrapper";
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -12,22 +11,18 @@ import { Input } from "@/components/ui/input";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
-import { useState, useTransition } from "react";
+import { useLoginForm } from "@/hooks/useLoginForm";
 const LoginForm = () => {
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
   const {
+    isPending,
+    error,
+    success,
     register,
     handleSubmit,
-    formState: { errors },
+    errors,
     control,
-  } = useForm();
-
-  const onSubmit = (data) => {
-    console.log(data);
-    // You can handle form submission here, e.g., send data to your backend
-  };
+    onSubmit,
+  } = useLoginForm();
   return (
     <CardWrapper
       headerLabel="Welcome Back"
