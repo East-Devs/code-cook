@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
 import { loginUser } from "@/api/loginUser";
-
+import { useNavigate } from "react-router-dom";
 export const useLoginForm = () => {
+  const navigate = useNavigate(); // Use useNavigate hook
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -27,6 +28,7 @@ export const useLoginForm = () => {
           setError(response.error);
         } else if (response.success) {
           setSuccess(response.success);
+          navigate("/");
         }
       });
     });

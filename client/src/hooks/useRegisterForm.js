@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
 import { registerUser } from "@/api/registerUser";
+import { redirect } from "react-router-dom";
 
 export const useRegisterForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -28,6 +29,7 @@ export const useRegisterForm = () => {
           setError(response.error);
         } else if (response.success) {
           setSuccess(response.success);
+          redirect("/signin");
         }
       });
     });

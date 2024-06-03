@@ -1,4 +1,4 @@
-import prisma from "../script.js";
+import prisma from "../../script.js";
 
 export const getUserByEmail = async (email) => {
   try {

@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import prisma from "../script.js";
-import { getUserByEmail } from "../data/user.js";
+import { getUserByEmail } from "./data/user.js";
 import jwt from "jsonwebtoken";
 const secretKey = process.env.JWT_SECRET;
 import bcryptjs from "bcryptjs";
@@ -38,11 +38,11 @@ app.post("/login", async (req, res) => {
     }
 
     // Create a JWT token
-    const token = jwt.sign({ userId: user._id, email: user.email }, secretKey, {
+    const token = jwt.sign({ userId: user.id, email: user.email }, secretKey, {
       expiresIn: "1h",
     });
 
-    res.status(200).json({ token, userId: user._id, success: "Logged In!" });
+    res.status(200).json({ token, userId: user.id, success: "Logged In!" });
   } catch (error) {
     res.status(500).json({ error: "Authentication failed" });
   }

@@ -105,7 +105,11 @@ const RegistrationForm = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button type="submit" className="w-full" disabled={isPending}>
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+          >
             Create an account
           </Button>
         </form>
