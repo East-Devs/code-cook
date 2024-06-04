@@ -1,7 +1,14 @@
-import { Form, NavLink, useRouteLoaderData } from "react-router-dom";
+import AuthContext from "@/context/authContext";
+import { useContext } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function MainNavigation() {
-  const token = useRouteLoaderData("root");
+  const { token, signOut } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    signOut();
+    navigate("/");
+  };
   return (
     <div className="bg-blue-600 text-white p-4">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
@@ -24,9 +31,7 @@ export default function MainNavigation() {
           )}
           {token && (
             <li>
-              <Form action="/logout" method="post">
-                <button>Logout</button>
-              </Form>
+              <button onClick={handleLogout}>Logout</button>
             </li>
           )}
         </ul>

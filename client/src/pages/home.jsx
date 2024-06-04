@@ -1,4 +1,17 @@
+import { Button } from "@/components/ui/button";
+import { isTokenValid } from "@/lib/auth";
+import { Link, useNavigate } from "react-router-dom";
+
 const Home = () => {
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    if (isTokenValid()) {
+      navigate("/form");
+    } else {
+      navigate("/signin");
+    }
+  };
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow container mx-auto p-4">
@@ -10,9 +23,14 @@ const Home = () => {
             Input your business data and let AI generate email templates
             tailored to your needs.
           </p>
-          <button className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700">
-            Get Started
-          </button>
+          <Button
+            asChild
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={handleGetStarted}
+          >
+            <span>Get Started</span>
+          </Button>
+          {/* <button className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700"></button> */}
         </section>
 
         <section id="features" className="py-20">

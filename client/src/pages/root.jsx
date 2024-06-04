@@ -1,18 +1,21 @@
 import MainNavigation from "@/components/main-navigation";
-import { useEffect } from "react";
-import { Outlet, useLoaderData, useSubmit } from "react-router-dom";
+import AuthContext from "@/context/authContext";
+import { getTokenDuration } from "@/lib/auth";
+import { useContext, useEffect } from "react";
+import { Outlet } from "react-router-dom";
 
 const Root = () => {
-  const token = useLoaderData();
-  const submit = useSubmit();
+  const { token, signOut } = useContext(AuthContext);
   useEffect(() => {
     if (!token) {
       return;
     }
+    const tokenDuration = getTokenDuration();
+    console.log(tokenDuration);
     setTimeout(() => {
-      submit(null, { action: "/logout", method: "post" });
-    }, 1 * 60 * 60 * 1000);
-  }, [token, submit]);
+      signOut();
+    }, tokenDuration);
+  }, [token, signOut]);
   return (
     <>
       <MainNavigation />

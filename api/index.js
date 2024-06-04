@@ -4,6 +4,7 @@ import cors from "cors";
 import prisma from "../script.js";
 import { getUserByEmail } from "./data/user.js";
 import jwt from "jsonwebtoken";
+import OpenAI from "openai";
 const secretKey = process.env.JWT_SECRET;
 import bcryptjs from "bcryptjs";
 dotenv.config();
@@ -12,13 +13,22 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Initialize OpenAI configuration
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY, // This is also the default, can be omitted
+});
+
 app.get("/", async (req, res) => {
   try {
-    const users = await prisma.user.findMany();
-    res.json(users); // Ensure you're sending JSON response
+    const completion = await openai.chat.completions.create({
+      messages: [{ role: "system", content: "You are a helpful assistant." }],
+      model: "gpt-3.5-turbo",
+    });
+
+    console.log(completion.choices[0].message.content);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to fetch users" });
+    res.status(500).json({ error: "Failed to connet with openAI" });
   }
 });
 

@@ -8,9 +8,10 @@ export const CardWrapper = ({
   backButtonLabel,
   backButtonHref,
   headerText,
+  className = "w-[400px] shadow-md", // Add className prop
 }) => {
   return (
-    <Card className="w-[400px] shadow-md">
+    <Card className={className}>
       <CardHeader>
         <Header label={headerLabel} headerText={headerText} />
       </CardHeader>

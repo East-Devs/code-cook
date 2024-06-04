@@ -4,16 +4,15 @@ import SignIn from "./pages/signin";
 import SignUp from "./pages/signup";
 import Root from "./pages/root";
 import Error from "./pages/error";
-import { checkAuthLoader, isTokenValid, tokenLoader } from "./lib/auth";
-import { action as logoutAction } from "@/components/auth/logout";
+import { checkAuthLoader, isTokenValid } from "./lib/auth";
 import Business from "./pages/business";
+import BusinessFormPage from "./pages/businessFormPage";
+import { AuthProvider } from "./context/authContext";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     errorElement: <Error />,
-    id: "root",
-    loader: tokenLoader,
     children: [
       {
         index: true,
@@ -22,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "business",
         element: isTokenValid() ? <Business /> : <SignIn />,
+      },
+      {
+        path: "form",
+        element: <BusinessFormPage />,
       },
       {
         path: "signin",
@@ -33,15 +36,15 @@ const router = createBrowserRouter([
         element: <SignUp />,
         loader: checkAuthLoader,
       },
-      {
-        path: "logout",
-        action: logoutAction,
-      },
     ],
   },
 ]);
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 };
 
 export default App;

@@ -17,6 +17,23 @@ export const isTokenExpired = (token) => {
   }
 };
 
+// Function to get token duration
+export const getTokenDuration = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+      const duration = decoded.exp - currentTime;
+      const durationInMilliSeconds = duration * 1000;
+      return durationInMilliSeconds > 0 ? durationInMilliSeconds : 0;
+    } catch (error) {
+      return 0; // Return 0 if there is an error decoding the token
+    }
+  }
+  return 0; // Return 0 if there is no token
+};
+
 // Function to check if token exists and is valid
 export const isTokenValid = () => {
   const token = localStorage.getItem("token");

@@ -1,10 +1,8 @@
 import { useForm } from "react-hook-form";
-import { useContext, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { loginUser } from "@/api/loginUser";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "@/context/authContext";
-export const useLoginForm = () => {
-  const { signIn } = useContext(AuthContext);
+export const useBusinessDetailForm = () => {
   const navigate = useNavigate(); // Use useNavigate hook
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState(null);
@@ -16,8 +14,16 @@ export const useLoginForm = () => {
     control,
   } = useForm({
     defaultValues: {
-      email: "",
-      password: "",
+      companyName: "",
+      companyEmail: "",
+      userName: "",
+      userCompanyName: "",
+      userEmail: "",
+      subjectLine: "",
+      recipientName: "",
+      recipientEmail: "",
+      emailPurpose: "",
+      emailContent: "",
     },
   });
 
@@ -30,7 +36,6 @@ export const useLoginForm = () => {
           setError(response.error);
         } else if (response.success) {
           setSuccess(response.success);
-          signIn(response.token);
           navigate("/");
         }
       });
