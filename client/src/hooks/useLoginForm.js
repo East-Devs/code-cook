@@ -30,7 +30,7 @@ export const useLoginForm = () => {
           setError(response.error);
         } else if (response.success) {
           setSuccess(response.success);
-          signIn(response.token);
+          signIn(response.token, response.userId, response.userEmail);
           navigate("/");
         }
       });

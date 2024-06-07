@@ -10,21 +10,72 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { CardWrapper } from "./card-wrapper";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
+import { useState } from "react";
+import ColorPicker from "./color-picker";
+import LogoUpload from "./logo-upload";
 
 const BusinessDetailForm = () => {
   const {
     isPending,
     error,
     success,
-    register,
     handleSubmit,
     errors,
     control,
     onSubmit,
+    setValue, // use setValue to programmatically set form values
+    getValues, // use getValues to get current form values
   } = useBusinessDetailForm();
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+        setValue("logo", file); // Set form value for logo
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreviewUrl(null);
+      setValue("logo", null); // Clear form value for logo if no file selected
+    }
+  };
+  const handleRemoveFile = () => {
+    setPreviewUrl(null);
+    setValue("logo", null); // Clear form value for logo if no file selected
+  };
+  // State to manage selected colors
+  const [selectedPrimaryColor, setSelectedPrimaryColor] = useState(
+    getValues("primaryColor") || "#FF5733"
+  ); // Default primary color
+
+  const [selectedSecondaryColor, setSelectedSecondaryColor] = useState(
+    getValues("secondaryColor") || "#3333FF"
+  ); // Default secondary color
+
+  // Handle primary color change and update form value
+  const handlePrimaryColorChange = (color) => {
+    setSelectedPrimaryColor(color);
+    setValue("primaryColor", color, { shouldValidate: true });
+  };
+
+  // Handle secondary color change and update form value
+  const handleSecondaryColorChange = (color) => {
+    setSelectedSecondaryColor(color);
+    setValue("secondaryColor", color, { shouldValidate: true });
+  };
+
   return (
     <CardWrapper
       headerLabel="Please Enter Details"
@@ -35,183 +86,280 @@ const BusinessDetailForm = () => {
     >
       <Form {...control}>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={control}
-                name="companyName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} id="companyName" type="text" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-                rules={{ required: "Company Name is required" }}
-              />
-              <FormField
-                control={control}
-                name="companyEmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company Email</FormLabel>
-                    <FormControl>
-                      <Input {...field} id="companyEmail" type="email" />
-                    </FormControl>
-                    <FormMessage>{errors.companyEmail?.message}</FormMessage>
-                  </FormItem>
-                )}
-                rules={{
-                  required: "Company Email is required",
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                    message: "Invalid email address",
-                  },
-                }}
-              />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={control}
-                name="userName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Your Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} id="userName" type="text" />
-                    </FormControl>
-                    <FormMessage>{errors.userName?.message}</FormMessage>
-                  </FormItem>
-                )}
-                rules={{ required: "Your Name is required" }}
-              />
-              <FormField
-                control={control}
-                name="userCompanyName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Your Company Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} id="userCompanyName" type="text" />
-                    </FormControl>
-                    <FormMessage>{errors.userCompanyName?.message}</FormMessage>
-                  </FormItem>
-                )}
-                rules={{ required: "Your Company Name is required" }}
-              />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={control}
-                name="userEmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Your Email</FormLabel>
-                    <FormControl>
-                      <Input {...field} id="userEmail" type="email" />
-                    </FormControl>
-                    <FormMessage>{errors.userEmail?.message}</FormMessage>
-                  </FormItem>
-                )}
-                rules={{
-                  required: "Your Email is required",
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                    message: "Invalid email address",
-                  },
-                }}
-              />
-              <FormField
-                control={control}
-                name="subjectLine"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Subject Line</FormLabel>
-                    <FormControl>
-                      <Input {...field} id="subjectLine" type="text" />
-                    </FormControl>
-                    <FormMessage>{errors.subjectLine?.message}</FormMessage>
-                  </FormItem>
-                )}
-                rules={{ required: "Subject Line is required" }}
-              />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={control}
-                name="recipientName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Recipient's Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} id="recipientName" type="text" />
-                    </FormControl>
-                    <FormMessage>{errors.recipientName?.message}</FormMessage>
-                  </FormItem>
-                )}
-                rules={{ required: "Recipient Name is required" }}
-              />
-              <FormField
-                control={control}
-                name="recipientEmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Recipient's Email</FormLabel>
-                    <FormControl>
-                      <Input {...field} id="recipientEmail" type="email" />
-                    </FormControl>
-                    <FormMessage>{errors.recipientEmail?.message}</FormMessage>
-                  </FormItem>
-                )}
-                rules={{
-                  required: "Recipient Email is required",
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                    message: "Invalid email address",
-                  },
-                }}
-              />
-            </div>
+          <FormField
+            control={control}
+            name="logo"
+            render={() => (
+              <FormItem>
+                <FormLabel>Logo</FormLabel>
+                <LogoUpload
+                  handleFileChange={handleFileChange}
+                  previewUrl={previewUrl}
+                  handleRemoveFile={handleRemoveFile}
+                />
+                <FormMessage></FormMessage>
+              </FormItem>
+            )}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={control}
-              name="emailPurpose"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Purpose of the Email</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input {...field} id="emailPurpose" type="text" />
+                    <Input
+                      {...field}
+                      id="name"
+                      placeholder="Gardenia Home Goods"
+                    />
                   </FormControl>
-                  <FormMessage>{errors.emailPurpose?.message}</FormMessage>
+                  <FormMessage>{errors.name?.message}</FormMessage>
                 </FormItem>
               )}
-              rules={{ required: "Purpose of the Email is required" }}
+              rules={{ required: "Name is required" }}
             />
+
             <FormField
               control={control}
-              name="emailContent"
+              name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email Body Content</FormLabel>
+                  <FormLabel>Address</FormLabel>
                   <FormControl>
-                    <Textarea {...field} id="emailContent" />
+                    <Input
+                      {...field}
+                      id="address"
+                      placeholder="1234 Elm St, Springfield, IL 62704"
+                    />
                   </FormControl>
-                  <FormMessage>{errors.emailContent?.message}</FormMessage>
+                  <FormMessage>{errors.address?.message}</FormMessage>
                 </FormItem>
               )}
-              rules={{ required: "Email Content is required" }}
+              rules={{ required: "Address is required" }}
             />
           </div>
+          <FormField
+            control={control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    id="email"
+                    placeholder="Target Company Email"
+                    type="email"
+                  />
+                </FormControl>
+                <FormMessage>{errors.email?.message}</FormMessage>
+              </FormItem>
+            )}
+            rules={{
+              required: "Email is required",
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                message: "Invalid email address",
+              },
+            }}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={control}
+              name="primaryColor"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Primary Color</FormLabel>
+                  <ColorPicker
+                    color={selectedPrimaryColor}
+                    onChange={handlePrimaryColorChange}
+                  />
+                  <FormMessage>{errors.primaryColor?.message}</FormMessage>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={control}
+              name="secondaryColor"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Secondary Color</FormLabel>
+                  <ColorPicker
+                    color={selectedSecondaryColor}
+                    onChange={handleSecondaryColorChange}
+                  />
+                  <FormMessage>{errors.secondaryColor?.message}</FormMessage>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <FormField
+            control={control}
+            name="typeOfBusiness"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Type of Business</FormLabel>
+                <FormControl>
+                  <Select
+                    {...field}
+                    id="typeOfBusiness"
+                    placeholder="Select business type"
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select business type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Retail – Home Decor">
+                        Retail – Home Decor
+                      </SelectItem>
+                      <SelectItem value="Service – IT">Service – IT</SelectItem>
+                      <SelectItem value="Manufacturing">
+                        Manufacturing
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage>{errors.typeOfBusiness?.message}</FormMessage>
+              </FormItem>
+            )}
+            rules={{ required: "Type of Business is required" }}
+          />
+
+          <FormField
+            control={control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>What do you do?</FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    id="description"
+                    placeholder="We sell eco-friendly home decor products."
+                  />
+                </FormControl>
+                <FormMessage>{errors.description?.message}</FormMessage>
+              </FormItem>
+            )}
+            rules={{ required: "Description is required" }}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={control}
+              name="targetCompanyName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Target Company Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      id="targetCompanyName"
+                      placeholder="Target Company Name"
+                    />
+                  </FormControl>
+                  <FormMessage>{errors.targetCompanyName?.message}</FormMessage>
+                </FormItem>
+              )}
+              rules={{ required: "Target Company Name is required" }}
+            />
+
+            <FormField
+              control={control}
+              name="targetCompanyEmail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Target Company Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      id="targetCompanyEmail"
+                      placeholder="Target Company Email"
+                      type="email"
+                    />
+                  </FormControl>
+                  <FormMessage>
+                    {errors.targetCompanyEmail?.message}
+                  </FormMessage>
+                </FormItem>
+              )}
+              rules={{
+                required: "Target Company Email is required",
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                  message: "Invalid email address",
+                },
+              }}
+            />
+          </div>
+          <FormField
+            control={control}
+            name="targetAudience"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>What is your target audience?</FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    id="targetAudience"
+                    placeholder="Homeowners aged 30-50 interested in sustainability."
+                  />
+                </FormControl>
+                <FormMessage>{errors.targetAudience?.message}</FormMessage>
+              </FormItem>
+            )}
+            rules={{ required: "Target Audience is required" }}
+          />
+
+          <FormField
+            control={control}
+            name="emailStyle"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email Style Preference</FormLabel>
+                <FormControl>
+                  <Select
+                    {...field}
+                    id="emailStyle"
+                    placeholder="Select email style"
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select email style" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Casual">Casual</SelectItem>
+                      <SelectItem value="Formal">Formal</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage>{errors.emailStyle?.message}</FormMessage>
+              </FormItem>
+            )}
+            rules={{ required: "Email Style is required" }}
+          />
+
           <FormError message={error} />
           <FormSuccess message={success} />
+
           <div>
             <Button
               type="submit"
               className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               disabled={isPending}
             >
-              Generate Email
+              Submit
             </Button>
           </div>
         </form>

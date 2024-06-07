@@ -5,6 +5,8 @@ import prisma from "../script.js";
 import { getUserByEmail } from "./data/user.js";
 import jwt from "jsonwebtoken";
 import OpenAI from "openai";
+import multerUpload from "./middleware/multer.config.js";
+import cloudinary from "./middleware/cloudinary.config.js";
 const secretKey = process.env.JWT_SECRET;
 import bcryptjs from "bcryptjs";
 dotenv.config();
@@ -52,7 +54,12 @@ app.post("/login", async (req, res) => {
       expiresIn: "1h",
     });
 
-    res.status(200).json({ token, userId: user.id, success: "Logged In!" });
+    res.status(200).json({
+      token,
+      userId: user.id,
+      userEmail: user.email,
+      success: "Logged In!",
+    });
   } catch (error) {
     res.status(500).json({ error: "Authentication failed" });
   }
@@ -78,4 +85,50 @@ app.post("/register", async (req, res) => {
 
 app.listen(3000, () => {
   console.log("Server listening on port 3000");
+});
+
+// businessform
+app.post("/businessform", multerUpload.single("logo"), async (req, res) => {
+  const {
+    name,
+    address,
+    email,
+    primaryColor,
+    secondaryColor,
+    typeOfBusiness,
+    description,
+    targetCompanyName,
+    targetCompanyEmail,
+    targetAudience,
+    emailStyle,
+    userId,
+  } = req.body;
+  try {
+    // Upload image to Cloudinary
+    const result = await cloudinary.uploader.upload(req.file.path);
+    console.log(result.secure_url);
+    // Save company data including Cloudinary image URL to Prisma
+    const company = await prisma.businessForm.create({
+      data: {
+        name,
+        address,
+        email,
+        primaryColor,
+        secondaryColor,
+        typeOfBusiness,
+        description,
+        targetCompanyName,
+        targetCompanyEmail,
+        targetAudience,
+        emailStyle,
+        user: { connect: { id: Number(userId) } },
+        logo: result.secure_url, // Assuming 'secure_url' from Cloudinary response
+      },
+    });
+
+    res.status(201).json({ company, success: "Success!" });
+  } catch (err) {
+    console.error("Error uploading file:", err);
+    res.status(500).json({ error: "Error uploading file" });
+  }
 });

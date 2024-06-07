@@ -19,4 +19,25 @@ model User {
   password String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  businessForms  BusinessForm[]  // Add the relation field here
+}
+
+model BusinessForm {
+  id                Int      @id @default(autoincrement())
+  name              String
+  address           String
+  email             String   @unique
+  primaryColor      String
+  secondaryColor    String
+  typeOfBusiness    String
+  description       String
+  targetCompanyName String
+  targetCompanyEmail String
+  targetAudience    String
+  emailStyle        String
+  logo              String   // Storing the file path or URL to the logo
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  userId            Int
+  user              User     @relation(fields: [userId], references: [id])
 }
