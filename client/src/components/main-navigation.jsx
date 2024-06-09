@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 export default function MainNavigation() {
-  const { token, signOut } = useContext(AuthContext);
+  const { token, signOut, userInfo } = useContext(AuthContext);
   const navigate = useNavigate();
   const handleLogout = () => {
     signOut();
@@ -19,6 +19,11 @@ export default function MainNavigation() {
           <NavLink to="/">
             <li>Home</li>
           </NavLink>
+          {userInfo && (
+            <NavLink to={`businessforms/${userInfo.userId}`}>
+              <li>My Forms</li>
+            </NavLink>
+          )}
           {!token && (
             <>
               <li>

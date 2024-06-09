@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form";
 import { useContext, useState, useTransition } from "react";
 import { useNavigate } from "react-router-dom";
-import { businessForm } from "@/api/businessForm";
+import { createBusinessForm } from "@/api/createBusinessForm";
+import { updateBusinessForm } from "@/api/updateBusinessForm";
 import AuthContext from "@/context/authContext";
-export const useBusinessDetailForm = () => {
+export const useBusinessDetailForm = ({ formId }) => {
   const { userInfo } = useContext(AuthContext);
 
   const navigate = useNavigate(); // Use useNavigate hook
@@ -35,17 +36,19 @@ export const useBusinessDetailForm = () => {
   const onSubmit = (data) => {
     setError("");
     setSuccess("");
-    // const formData = new FormData();
-    // Object.keys(data).forEach((key) => {
-    //   formData.append(key, data[key]);
-    // });
+    if (!userInfo || !userInfo.userId) {
+      setError("User information is not available. Please log in again.");
+      return;
+    }
     data.userId = userInfo.userId;
     startTransition(() => {
-      businessForm(data).then((response) => {
+      const submitFunction = formId ? updateBusinessForm : createBusinessForm;
+      submitFunction(data, formId).then((response) => {
         if (response.error) {
           setError(response.error);
         } else if (response.success) {
           setSuccess(response.success);
+          navigate(`/preview-email/${response.businessForm.id}`);
         }
       });
     });

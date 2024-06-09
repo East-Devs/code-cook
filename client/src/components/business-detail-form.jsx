@@ -20,11 +20,11 @@ import {
 import { CardWrapper } from "./card-wrapper";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ColorPicker from "./color-picker";
 import LogoUpload from "./logo-upload";
 
-const BusinessDetailForm = () => {
+const BusinessDetailForm = ({ formData, formId }) => {
   const {
     isPending,
     error,
@@ -34,9 +34,19 @@ const BusinessDetailForm = () => {
     control,
     onSubmit,
     setValue, // use setValue to programmatically set form values
-    getValues, // use getValues to get current form values
-  } = useBusinessDetailForm();
-  const [previewUrl, setPreviewUrl] = useState(null);
+  } = useBusinessDetailForm({ formId });
+  const [previewUrl, setPreviewUrl] = useState(formData.logo || null);
+  useEffect(() => {
+    // Set initial form values when editing
+    if (formData && formId) {
+      for (const key in formData) {
+        setValue(key, formData[key]);
+      }
+      if (formData.logo) {
+        setPreviewUrl(formData.logo);
+      }
+    }
+  }, [formData, formId, setValue]);
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -57,11 +67,11 @@ const BusinessDetailForm = () => {
   };
   // State to manage selected colors
   const [selectedPrimaryColor, setSelectedPrimaryColor] = useState(
-    getValues("primaryColor") || "#FF5733"
+    formData.primaryColor || "#FF5733"
   ); // Default primary color
 
   const [selectedSecondaryColor, setSelectedSecondaryColor] = useState(
-    getValues("secondaryColor") || "#3333FF"
+    formData.secondaryColor || "#3333FF"
   ); // Default secondary color
 
   // Handle primary color change and update form value

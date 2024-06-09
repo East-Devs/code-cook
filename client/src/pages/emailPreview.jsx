@@ -1,7 +1,7 @@
-import BusinessList from "@/components/business-listing";
+import EmailPreviewPage from "@/components/email-preview-page";
 import { useLoaderData, useNavigation } from "react-router-dom";
 
-const Business = () => {
+const EmailPreview = () => {
   const result = useLoaderData();
   const navigation = useNavigation();
 
@@ -10,9 +10,9 @@ const Business = () => {
   }
   return (
     <div>
-      <BusinessList businessForms={result} />
+      <EmailPreviewPage emailData={result} />
     </div>
   );
 };
 
-export default Business;
+export default EmailPreview;

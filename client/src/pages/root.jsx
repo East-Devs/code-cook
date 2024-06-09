@@ -11,7 +11,6 @@ const Root = () => {
       return;
     }
     const tokenDuration = getTokenDuration();
-    console.log(tokenDuration);
     setTimeout(() => {
       signOut();
     }, tokenDuration);

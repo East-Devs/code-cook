@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import { redirect } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -8,7 +9,8 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
-    const savedUser = localStorage.getItem("user");
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+
     if (savedToken) {
       setToken(savedToken);
     }
@@ -19,9 +21,10 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = (newToken, userId, userEmail) => {
     localStorage.setItem("token", newToken);
-    localStorage.setItem("user", { userId, userEmail });
+    const userInfo = { userId, userEmail };
+    localStorage.setItem("user", JSON.stringify(userInfo));
     setToken(newToken);
-    setUserInfo({ userId, userEmail });
+    setUserInfo(userInfo);
   };
 
   const signOut = () => {
@@ -29,6 +32,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
     setToken(null);
     setUserInfo(null);
+    redirect("/");
   };
 
   return (

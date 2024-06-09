@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const businessForm = async (data) => {
+export const updateBusinessForm = async (data, formId) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3000/businessform",
+    const response = await axios.put(
+      `http://localhost:3000/api/businessform/${formId}`,
       data,
       {
         headers: {

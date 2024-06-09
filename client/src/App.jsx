@@ -8,6 +8,9 @@ import { checkAuthLoader, isTokenValid } from "./lib/auth";
 import Business from "./pages/business";
 import BusinessFormPage from "./pages/businessFormPage";
 import { AuthProvider } from "./context/authContext";
+import EmailPreview from "./pages/emailPreview";
+import { businessFormsLoader } from "./loaders/businessFormsLoader";
+import { emailTemplateLoader } from "./loaders/emailTemplateLoader";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -19,12 +22,23 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "business",
+        path: "businessforms/:userId",
         element: isTokenValid() ? <Business /> : <SignIn />,
+        loader: businessFormsLoader,
       },
       {
         path: "form",
-        element: <BusinessFormPage />,
+        element: isTokenValid() ? <BusinessFormPage /> : <SignIn />,
+      },
+      {
+        path: "form/:formId",
+        element: isTokenValid() ? <BusinessFormPage /> : <SignIn />,
+        loader: emailTemplateLoader,
+      },
+      {
+        path: "preview-email/:formId",
+        element: isTokenValid() ? <EmailPreview /> : <SignIn />,
+        loader: emailTemplateLoader,
       },
       {
         path: "signin",
