@@ -22,22 +22,22 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "businessforms/:userId",
-        element: isTokenValid() ? <Business /> : <SignIn />,
+        path: "businessforms",
+        element: <Business />,
         loader: businessFormsLoader,
       },
       {
         path: "form",
-        element: isTokenValid() ? <BusinessFormPage /> : <SignIn />,
+        element: <BusinessFormPage />,
       },
       {
         path: "form/:formId",
-        element: isTokenValid() ? <BusinessFormPage /> : <SignIn />,
+        element: <BusinessFormPage />,
         loader: emailTemplateLoader,
       },
       {
         path: "preview-email/:formId",
-        element: isTokenValid() ? <EmailPreview /> : <SignIn />,
+        element: <EmailPreview />,
         loader: emailTemplateLoader,
       },
       {

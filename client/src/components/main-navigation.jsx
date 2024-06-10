@@ -20,8 +20,13 @@ export default function MainNavigation() {
             <li>Home</li>
           </NavLink>
           {userInfo && (
-            <NavLink to={`businessforms/${userInfo.userId}`}>
+            <NavLink to="businessforms">
               <li>My Forms</li>
+            </NavLink>
+          )}
+          {userInfo && (
+            <NavLink to="form">
+              <li>Get Started</li>
             </NavLink>
           )}
           {!token && (

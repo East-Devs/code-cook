@@ -1,13 +1,16 @@
 import { NavLink } from "react-router-dom";
 import ColorPicker from "./color-picker";
+import { CardWrapper } from "./card-wrapper";
 
 const BusinessList = ({ businessForms }) => {
   return (
-    <div className="">
-      <h2 className="text-3xl font-semibold text-gray-800 mb-6">
-        Business Forms
-      </h2>
-
+    <CardWrapper
+      headerLabel="Saved Business Forms"
+      headerText="My Business Forms"
+      backButtonLabel="Go Back"
+      backButtonHref="/"
+      className="w-[1500px] shadow-md"
+    >
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-800 text-white">
@@ -19,10 +22,10 @@ const BusinessList = ({ businessForms }) => {
               <th className="py-3 px-6 text-left">Primary Color</th>
               <th className="py-3 px-6 text-left">Secondary Color</th>
               <th className="py-3 px-6 text-left">Type of Business</th>
-              <th className="py-3 px-6 text-left">Description</th>
+              {/* <th className="py-3 px-6 text-left">Description</th> */}
               <th className="py-3 px-6 text-left">Target Company Name</th>
               <th className="py-3 px-6 text-left">Target Company Email</th>
-              <th className="py-3 px-6 text-left">Target Audience</th>
+              {/* <th className="py-3 px-6 text-left">Target Audience</th> */}
               <th className="py-3 px-6 text-left">Email Style</th>
               <th className="py-3 px-6 text-left">Logo</th>
             </tr>
@@ -43,10 +46,10 @@ const BusinessList = ({ businessForms }) => {
                   {<ColorPicker color={form.secondaryColor} />}
                 </td>
                 <td className="py-4 px-6">{form.typeOfBusiness}</td>
-                <td className="py-4 px-6">{form.description}</td>
+                {/* <td className="py-4 px-6">{form.description}</td> */}
                 <td className="py-4 px-6">{form.targetCompanyName}</td>
                 <td className="py-4 px-6">{form.targetCompanyEmail}</td>
-                <td className="py-4 px-6">{form.targetAudience}</td>
+                {/* <td className="py-4 px-6">{form.targetAudience}</td> */}
                 <td className="py-4 px-6">{form.emailStyle}</td>
                 <td className="py-4 px-6">
                   {form.logo && (
@@ -62,7 +65,7 @@ const BusinessList = ({ businessForms }) => {
           </tbody>
         </table>
       </div>
-    </div>
+    </CardWrapper>
   );
 };
 

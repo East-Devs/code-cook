@@ -9,7 +9,7 @@ const BusinessFormPage = () => {
     return <p className="text-gray-600">Loading...</p>;
   }
   return (
-    <div className="flex justify-center items-center">
+    <div className="container mx-auto p-4 flex justify-center items-center">
       <BusinessDetailForm formData={result || {}} formId={formId} />
     </div>
   );

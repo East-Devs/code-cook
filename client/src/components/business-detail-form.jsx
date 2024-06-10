@@ -92,7 +92,7 @@ const BusinessDetailForm = ({ formData, formId }) => {
       headerText="Generate Customized Emails"
       backButtonLabel="Go Back"
       backButtonHref="/"
-      className="w-[1150px] shadow-md"
+      className="w-[1500px] shadow-md"
     >
       <Form {...control}>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>

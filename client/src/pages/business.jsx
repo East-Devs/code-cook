@@ -9,7 +9,7 @@ const Business = () => {
     return <p className="text-gray-600">Loading...</p>;
   }
   return (
-    <div>
+    <div className=" container mx-auto p-4 flex justify-center items-center">
       <BusinessList businessForms={result} />
     </div>
   );
