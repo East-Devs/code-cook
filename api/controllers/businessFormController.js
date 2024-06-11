@@ -173,7 +173,7 @@ export const updateBusinessForm = async (req, res) => {
     }
 
     // Update the business form details
-    const updatedBusinessForm = await prisma.businessForm.update({
+    const businessForm = await prisma.businessForm.update({
       where: { id: Number(businessFormId) },
       data: {
         name,
@@ -212,12 +212,12 @@ export const updateBusinessForm = async (req, res) => {
     const emailTemplate = completion.choices[0].message.content;
 
     await prisma.businessForm.update({
-      where: { id: updatedBusinessForm.id },
+      where: { id: businessForm.id },
       data: { emailTemplate },
     });
 
     res.status(200).json({
-      updatedBusinessForm,
+      businessForm,
       emailTemplate,
       success: "Update successful!",
     });
